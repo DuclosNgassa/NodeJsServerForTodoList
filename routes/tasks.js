@@ -135,13 +135,15 @@ router.get('/:id', async (req, res, next) => {
     const { id } = req.params;
     try {
         const task = await Task.findAll({
-            attributes: ['name', 'todoid', 'isfinished'],
+            attributes: ['id', 'name', 'todoid', 'isfinished'],
             where: {
                 id
-            },
-            include: {
-                model: Todo
-              }
+            }
+            /* ,
+             include: {
+                 model: Todo
+               }
+               */
         });
         if (task.length > 0) {
             res.json({
@@ -171,30 +173,18 @@ router.get('/:id', async (req, res, next) => {
 router.get('/todoid/:todoid', async (req, res, next) => {
     const { todoid } = req.params;
     try {
-        const task = await Task.findAll({
-            attributes: ['name', 'todoid', 'isfinished'],
+        let tasks = await Task.findAll({
+            attributes: ['id', 'name', 'todoid', 'isfinished'],
             where: {
                 todoid
-            },
-            include: {
-                model: Todo
-              }
+            }
         });
-        if (task.length > 0) {
-            res.json({
-                result: 'Ok',
-                data: task[0],
-                message: `Get Task by todoid: ${todoid} successfully`
-            });
-        }
-        else {
-            res.json({
-                result: 'Ok',
-                data: {},
-                message: `Get Task by todoid: ${todoid} failled`
 
-            });
-        }
+        res.json({
+            result: 'Ok',
+            data: tasks,
+            message: `Get Task by todoid: ${todoid} successfully`
+        });
     } catch (error) {
         res.json({
             result: 'Ok',
